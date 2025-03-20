@@ -1,0 +1,327 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{listings} % Для кода на Python
+\usepackage{xcolor} % Цветной код
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{caption}
+
+\lstset{
+    language=Python,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    breaklines=true
+}
+
+\begin{document}
+
+\section*{Расчетно графическая работа по функциональному анализу. Задание №\,1}
+
+Выполнил студент группы М80-308Б-22 МАИ \textit{Цирулев Николай}.
+
+\section{Задание}
+Задание I
+Докажите, что приведённое ниже отображение $T: C[0 ; 1] \rightarrow C[0 ; 1]$ (либо его степень) является сжимающим. Определите число итераций, необходимое для поиска неподвижной точки этого отображения с точностью $\varepsilon \in\left\{10^{-1}, 10^{-2}, 10^{-3}\right\}$ с помощью метода сжимающих отображений. С помощью вычислительной техники постройте график функции, являющейся неподвижной точкой отображения $T$. Проверьте результаты при различных значениях $\varepsilon$ и различных начальных приближениях в методе сжимающих отображений. Продемонстрируйте несколько графиков, получающихся при промежуточных вычислениях.
+\\
+Номер по списку 22, $k = 8, l = 5$\\
+Вариант: \\
+T(x)= \begin{cases}\frac{1}{1+k} x(3 t)-\frac{l}{2}, & 0 \leqslant t \leqslant \frac{1}{3} ; \\ f(t), & \frac{1}{3}<t<\frac{2}{3} ;  \\ \frac{1}{1+k} x(3 t-2), & \frac{2}{3} \leqslant t \leqslant 1,\end{cases}
+ \text { где } f(t)-\text { аффинная функция такая, что } T(x)-\text { непрерывная функция;}
+
+
+\section{Решение}
+\subsection{Доказательство и поиск коэффициента сжатия}}
+
+Докажем, что заданное отображение \( T: C[0,1] \to C[0,1] \) является сжимающим.
+
+Пространство \( (C[0,1], \rho) \) рассматривается с метрикой:
+\[
+\rho(x,y) = \max_{t \in [0,1]} |x(t) - y(t)|.
+\]
+
+Определение оператора \( T(x) \):
+
+\[
+T(x)(t) =
+\begin{cases}
+\frac{1}{9} x(3t) - \frac{5}{2}, & 0 \leq t \leq \frac{1}{3}; \\
+f(t), & \frac{1}{3} < t < \frac{2}{3}; \\
+\frac{1}{9} x(3t-2), & \frac{2}{3} \leq t \leq 1.
+\end{cases}
+\]
+
+По определению отображение \( T(x) \) является сжимающим, если $\exists$ \( \alpha \in [0,1) \) :
+
+\[
+\rho(T(x), T(y)) \leq \alpha \cdot \rho(x, y), \quad \forall x, y \in C[0,1].
+\]
+
+Рассмотрим три области отдельно.
+
+\paragraph{1. Область \( 0 \leq t \leq \frac{1}{3} \)}  
+\[
+T(x)(t) = \frac{1}{9} x(3t) - \frac{5}{2},
+\]
+\[
+T(y)(t) = \frac{1}{9} y(3t) - \frac{5}{2}.
+\]
+Тогда:
+
+\[
+|T(x)(t) - T(y)(t)| = \left| \frac{1}{9} x(3t) - \frac{5}{2} - \left(\frac{1}{9} y(3t) - \frac{5}{2} \right) \right| = \frac{1}{9} |x(3t) - y(3t)|.
+\]
+
+Так как \( |x(3t) - y(3t)| \leq \rho(x, y) \), то если $s = 3t, t \in [0; \frac{1}{3}] =>  s \in [0; 1]$, тогда:
+
+\[
+\max_{s \in [0,1]} |T(x)(s) - T(y)(s)| \leq \frac{1}{9} \rho(x, y).
+\]
+
+\paragraph{2. Область \( \frac{2}{3} \leq t \leq 1 \)}  
+\[
+T(x)(t) = \frac{1}{9} x(3t - 2),
+\]
+\[
+T(y)(t) = \frac{1}{9} y(3t - 2).
+\]
+Аналогично если $s = 3t - 2, t \in [\frac{2}{3}; 1] =>  s \in [0; 1]$, тогда:
+
+\[
+|T(x)(t) - T(y)(t)| = \frac{1}{9} |x(3t - 2) - y(3t - 2)| \leq \frac{1}{9} \rho(x, y).
+\]
+
+\paragraph{3. Область \( \frac{1}{3} < t < \frac{2}{3} \)}  
+Функция \( T(x) \) здесь аффинная и непрерывная. Из конструкции \( T(x) \) видно, что на этом интервале максимум отклонений также не превосходит \( \frac{1}{9} \rho(x, y) \).
+
+\paragraph{Вывод}  
+Объединяя оценки для всех трёх областей, получаем:
+
+\[
+\rho(T(x), T(y)) = \max_{t \in [0,1]} |T(x)(t) - T(y)(t)| \leq \frac{1}{9} \rho(x, y).
+\]
+
+Следовательно, \( T \) является сжимающим отображением с коэффициентом \( \alpha = \frac{1}{9} \).
+\\
+\\
+\subsection*{Определение числа итераций и построение графиков}
+
+По теореме Банаха, так, как метрическое пространство полное, то \(\exists! неподвижная точка x_*\) отображения T. Тогда определим число итераций для поиска неподвижной точки и построим графики.
+
+Сначала оценим $f(t)$: \\
+Поскольку $T(x)$ должно быть непрерывным по условию, функция $f(t)$ в интервале $\left(\frac{1}{3}, \frac{2}{3}\right)$ должна быть линейной и соединять значения $T(x)$ на границах $t=\frac{1}{3}$ и $t=\frac{2}{3}$.
+То есть, f(t)$ можно записать в виде:
+$$
+f(t)=a t+b
+$$
+
+Найдем коэффициенты $a$ и $b$. Пусть $A=T(x)\left(\frac{1}{3}\right)$ и $B=T(x)\left(\frac{2}{3}\right)$, тогда система уравнений:
+$$
+\begin{aligned}
+& A=a \cdot \frac{1}{3}+b \\
+& B=a \cdot \frac{2}{3}+b
+\end{aligned}
+$$
+
+Решая систему, получаем:
+$$
+\begin{gathered}
+a=\frac{B-A}{\frac{2}{3}-\frac{1}{3}}=3(B-A) \\
+b=A-a \cdot \frac{1}{3}=A-(B-A)=2 A-B .
+\end{gathered}
+$$
+
+Тогда:
+$$
+f(t)=3(B-A) t+(2 A-B)
+$$
+
+Теперь оценим число итераций:
+\[
+n > \frac{\ln \left(\varepsilon \cdot (1 - \alpha) / \rho(x_1 - x_0) \right)}{\ln \alpha}.
+\]
+Где:
+- \( \alpha = \frac{1}{9} \),
+- \( x_0(t) = t \),
+- \( \rho(x_1 - x_0) = \frac{5}{2} \).
+
+Для различных \( \varepsilon \):
+
+\begin{tabular}{|c|c|}
+\hline
+\( \varepsilon \) & \( n \) \\
+\hline
+\( 10^{-1} \) & 2 \\
+\( 10^{-2} \) & 3 \\
+\( 10^{-3} \) & 4 \\
+\hline
+\end{tabular}
+\\
+
+\section{Код, графики и выводы}
+
+\subsection{Код на Python}
+
+\begin{lstlisting}
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Функция T
+def T(x, t, k=8, l=5):
+    if t <= 1/3:
+        return (1 / (1 + k)) * x(3 * t) - l / 2
+    elif t >= 2/3:
+        return (1 / (1 + k)) * x(3 * t - 2)
+    else:
+        # Определяем граничные значения
+        A = T(x, 1/3)
+        B = T(x, 2/3)
+        return 3 * (B - A) * t + (2 * A - B)
+
+# Итерации функции T
+def iterate_T(x0, num_iter=10, num_points=1000):
+    t_values = np.linspace(0, 1, num_points)
+    x_values = x0(t_values)
+    history = [x_values.copy()]
+    
+    for _ in range(num_iter):
+        x_values_new = np.array([T(lambda t: np.interp(t, t_values, x_values), t) for t in t_values])
+        history.append(x_values_new.copy())
+        x_values = x_values_new
+    
+    return t_values, history
+
+# Функция для вычисления ошибки
+def compute_error(history, alpha=1/9):
+    errors = []
+    rho_0 = np.max(np.abs(history[0] - history[1]))
+    for n in range(1, len(history)):
+        error = (alpha ** n) * rho_0 / (1 - alpha)
+        errors.append(error)
+    return errors
+
+# Начальные приближения с LaTeX-записями
+x0_list = [
+    (lambda t: t, r'$x_0(t) = t$'),
+    (lambda t: np.sin(2 * np.pi * t), r'$x_0(t) = \sin(2\pi t)$'),
+    (lambda t: np.exp(-t), r'$x_0(t) = e^{-t}$')
+]
+
+# Построение графиков
+for x0, formula in x0_list:
+    t_values, history = iterate_T(x0, num_iter=5)
+    errors = compute_error(history)
+    
+    plt.figure(figsize=(8, 5))
+    for i, x_values in enumerate(history):
+        plt.plot(t_values, x_values, label=f'Итерация {i}')
+    
+    plt.title(f'Итерации для {formula}', fontsize=14)
+    plt.xlabel(r'$t$', fontsize=12)
+    plt.ylabel(r'$x(t)$', fontsize=12)
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+    # Вывод таблицы значений x и eps для каждой итерации
+    print(f'Таблица значений для {formula}:\n')
+    print(f'{"Итерация":^10} {"x(0.5)":^15} {"Ошибка eps":^15}')
+    print('-' * 40)
+    
+    for i, x_values in enumerate(history):
+        x_mid = x_values[len(x_values) // 2]
+        eps = errors[i - 1] if i > 0 else 0  
+        print(f'{i:^10} {x_mid:^15.5f} {eps:^15.5f}')
+    
+    print('\n' + '=' * 40 + '\n')
+
+\end{lstlisting}
+
+\subsection{Графики}
+
+\begin{figure}[!ht] 
+    \centering
+    \includegraphics[width=0.5\textwidth]{11.png}
+\end{figure}
+
+\begin{figure}[!ht] 
+    \centering
+    \includegraphics[width=0.5\textwidth]{22.png}
+\end{figure}
+
+\begin{figure}[!ht] 
+    \centering
+    \includegraphics[width=0.5\textwidth]{33.png}
+\end{figure}
+
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{10pt}
+    \renewcommand{\arraystretch}{1.2}
+    \caption{Значения для $x_0(t) = t$}
+    \begin{tabular}{c c c}
+        \toprule
+        Итерация & $x(0.5)$ & Ошибка $\varepsilon$ \\
+        \midrule
+        0 & 0.50050 & 0.00000 \\
+        1 & -1.19086 & 0.34028 \\
+        2 & -1.37940 & 0.03781 \\
+        3 & -1.40035 & 0.00420 \\
+        4 & -1.40267 & 0.00047 \\
+        5 & -1.40293 & 0.00005 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{10pt}
+    \renewcommand{\arraystretch}{1.2}
+    \caption{Значения для $x_0(t) = \sin(2\pi t)$}
+    \begin{tabular}{c c c}
+        \toprule
+        Итерация & $x(0.5)$ & Ошибка $\varepsilon$ \\
+        \midrule
+        0 & -0.00314 & 0.00000 \\
+        1 & -1.24625 & 0.45139 \\
+        2 & -1.38555 & 0.05015 \\
+        3 & -1.40103 & 0.00557 \\
+        4 & -1.40275 & 0.00062 \\
+        5 & -1.40294 & 0.00007 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\begin{table}[H]
+    \centering
+    \small
+    \setlength{\tabcolsep}{10pt}
+    \renewcommand{\arraystretch}{1.2}
+    \caption{Значения для $x_0(t) = e^{-t}$}
+    \begin{tabular}{c c c}
+        \toprule
+        Итерация & $x(0.5)$ & Ошибка $\varepsilon$ \\
+        \midrule
+        0 & 0.60623 & 0.00000 \\
+        1 & -1.17015 & 0.42361 \\
+        2 & -1.37710 & 0.04707 \\
+        3 & -1.40009 & 0.00523 \\
+        4 & -1.40265 & 0.00058 \\
+        5 & -1.40293 & 0.00006 \\
+        \bottomrule
+    \end{tabular}
+\end{table}
+
+\newpage
+\subsection{Выводы}
+
+Мы доказали, что \( T \) — сжимающее отображение строго по определению, нашли коэффициент сжатия, вычислили число итераций для различных \( \varepsilon \) и реализовали метод сжимающих отображений на Python с графической интерпретацией.
+
+\end{document}
