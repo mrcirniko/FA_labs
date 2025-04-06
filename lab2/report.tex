@@ -60,9 +60,9 @@ def gram_schmidt(n_max):
     for n in range(1, n_max + 1):
         phi_n = lambda t, n=n: create_basis_function(n)(t)
         for phi_k in ortho_polys:
-            coeff = inner_product(phi_n, phi_k) / inner_product(phi_k, phi_k)
+            coeff = scalar_product(phi_n, phi_k) / scalar_product(phi_k, phi_k)
             phi_n = lambda t, phi_n=phi_n, phi_k=phi_k, coeff=coeff: phi_n(t) - coeff * phi_k(t)
-        norm = np.sqrt(inner_product(phi_n, phi_n))
+        norm = np.sqrt(scalar_product(phi_n, phi_n))
         ortho_polys.append(lambda t, phi_n=phi_n, norm=norm: phi_n(t) / norm)
     return ortho_polys
 """Вычислим частичные суммы ряда Фурье"""
