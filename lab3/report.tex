@@ -1,0 +1,101 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{graphicx}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{caption}
+\usepackage[T1,T2A]{fontenc}
+\usepackage{minted}
+
+\begin{document}
+
+\section*{Расчетно графическая работа по функциональному анализу. Задание №\,3}
+
+Выполнил студент группы М80-308Б-22 МАИ \textit{Цирулев Николай}.
+
+\section{Задание}
+Вычислите интеграл Лебега-Стилтьеса $\int_{[a, b]} f(x) d F(x)$.
+\\
+Номер по списку 22, $k = 8, l = 5$\\
+Вариант: \\
+$[a, b]=[-k, 5 l] ; f(x)=2 \cos k x+2 \chi\left(3 x-\frac{l}{5}\right)-x^2,$\\
+$ F(x)=e^x+2 \chi(x+1)+2 \chi(4 x-k)+x^3$;
+
+\section{Решение}
+
+Функция $F(x)$ порождает меру Лебега–Стилтьеса $\mu_F$, состоящую из:
+
+\begin{itemize}
+    \item Абсолютно непрерывной части: $(e^x + 3x^2) dx$,
+    \item Скачков в точках $x = -1$ и $x = 2$, с величинами скачков, равными $2$.
+\end{itemize}
+
+Тогда интеграл записывается как:
+\[
+\int_{[-8, 25]} f(x) \, d\mu_F(x) =
+\int_{[-8, 25]} f(x)(e^x + 3x^2) dx + f(-1) \cdot \mu_F(\{-1\}) + f(2) \cdot \mu_F(\{2\}).
+\]
+
+Подставляя значения:
+\[
+f(-1) = 2 \cos(8) - 1,\quad f(2) = 2 \cos(16) - 2,\quad \mu_F(\{-1\}) = \mu_F(\{2\}) = 2,
+\]
+получаем:
+\[
+\boxed{
+\int_{[-8, 25]} f(x) \, d\mu_F(x) =
+\int_{[-8, 25]} f(x)(e^x + 3x^2) dx + 2(2 \cos(8) - 1) + 2(2 \cos(16) - 2)
+}
+\]
+
+\section{Численное вычисление}
+Найдём численное значение полученного интеграла с помощью функции \texttt{quad} из модуля \texttt{scipy.integrate} на языке Python:
+\subsection{Код на Python}
+
+\begin{lstlisting}[language=Python, basicstyle=\ttfamily\small, frame=single]
+import numpy as np
+from scipy.integrate import quad
+
+def f(x):
+    if x < 1/3:
+        return 2 * np.cos(8 * x) - x**2
+    else:
+        return 2 * np.cos(8 * x) + 2 - x**2
+
+def F_ac_prime(x):
+    return np.exp(x) + 3 * x**2
+
+def integrand(x):
+    return f(x) * F_ac_prime(x)
+
+I_continuous, _ = quad(integrand, -8, 25)
+
+f_minus1 = 2 * np.cos(8) - 1
+f_2 = 2 * np.cos(16) - 2
+I_atoms = 2 * f_minus1 + 2 * f_2
+
+I_total = I_continuous + I_atoms
+
+print(f"{I_total:.6f}")
+\end{lstlisting}
+
+Вывод:
+\begin{verbatim}
+-41417222153999.585938
+\end{verbatim}
+
+\section{Ответ}
+\[
+\int_{[-8, 25]} f(x) \, dF(x) =
+\int_{[-8, 25]} f(x)(e^x + 3x^2) dx + 2(2 \cos(8) - 1) + 2(2 \cos(16) - 2)
+\]
+
+\[
+\int_{[-8, 25]} f(x) \, dF(x) \approx -41417222153999.585938
+\]
+
+\end{document}
